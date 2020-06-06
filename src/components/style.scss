@@ -1,0 +1,31 @@
+.button{
+    margin: '10';
+}
+.task{
+    & .MuiPaper-root {
+        background-color: '#d5f4e6';
+        min-width: '275';
+    }
+}
+.bullet{
+    display: 'inline-block';
+    margin: '0px 2px';
+    transform: 'scale(0.8)';
+}
+.gridList{
+    width: 500;
+    height: 400;
+}
+.listTasks{
+    display: 'flex';
+    flex-wrap: 'wrap';
+    justify-content: space-around;
+    overflow: hidden;
+    background-color: whitesmoke;
+}
+.title{
+    font-size: 14;
+}
+.pos{
+    margin-bottom: 12;
+}
