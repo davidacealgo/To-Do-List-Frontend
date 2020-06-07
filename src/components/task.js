@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
@@ -25,6 +26,7 @@ export default class Task extends Component {
             users : []
         };
         this.assignUserToTask = this.assignUserToTask.bind(this);
+        this.changeStatus = this.changeStatus.bind(this);
         this.getNames = this.getNames.bind(this);
 
     }
@@ -37,25 +39,28 @@ export default class Task extends Component {
         });
     }
 
-    assignUserToTask(event, id) {
-        if(typeof id === 'undefined'){
-            console.log('jiji');
-            return 0;
-        }
+    assignUserToTask(event) {
         let user = this.state.users.filter(user => user.firstName === event.target.value);
         let userId = user[0]._id;
-        console.log(userId);
         userId = JSON.parse(`{"user": "${userId}"}`);
-        console.log(userId)
-        console.log(this.state.id);
-        axios.put(`http://localhost:3000/tasks/5ed88ab3bb7c110f13722a35/user/`, 
+        axios.put(`http://localhost:3000/tasks/${this.state.id}/user/`, 
             userId).then(response => {
                 console.log(response.data);
         });
     }
 
+    changeStatus(event) {
+        let status = JSON.parse(`{"status": "${event.target.value}"}`);
+        axios.put(`http://localhost:3000/tasks/${this.state.id}`, 
+            status).then(response => {
+                console.log(response.data);
+        });
+        this.setState({
+            state: event.target.value
+        })
+    }
+
     getNames(id) {
-        debugger;
         if(typeof id === 'undefined' || !this.state.users){
             return 'No asignado'
         } else {
@@ -63,7 +68,6 @@ export default class Task extends Component {
             if (typeof(user[0]) !== 'undefined')
                 return(`${user[0].firstName} ${user[0].lastName}` );
         }
-        debugger;
         //console.log(user[0].firstName);
         //return(`${user[0].firstName} ${user[0].lastName}`)
         /*user.map((u) =>{
@@ -91,24 +95,39 @@ export default class Task extends Component {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <InputLabel id="assign-user">Assign User</InputLabel>
-                        <Select
-                          labelId="assign-user"
-                          id="assign-user-select"
-                          onChange={this.assignUserToTask}
-                        >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        {
-                            this.state.users.map((user) =>{
-                                return (
-                                    <MenuItem value={user.firstName}>{user.firstName}</MenuItem>
-                                );
-                            })
-                        }
-                        </Select>
-                        <Button size="small">Assign user</Button>
+                        <div className="assignUser">
+                            <FormControl>
+                                <InputLabel id="assign-user-input">Assign user</InputLabel>
+                                <Select
+                                  labelId="assign-user"
+                                  id="assign-user-select"
+                                  onChange={this.assignUserToTask}
+                                >
+                                {
+                                    this.state.users.map((user) =>{
+                                        return (
+                                            <MenuItem value={user.firstName}>{user.firstName}</MenuItem>
+                                        );
+                                    })
+                                }
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className="changeStatus">
+                            <FormControl>
+                                <InputLabel id="assign-user-input">Change status</InputLabel>
+                                <Select
+                                  labelId="change-status"
+                                  id="change-status-select"
+                                  onChange={this.changeStatus}
+                                >
+                                <MenuItem value="Open">Open</MenuItem>
+                                <MenuItem value="In progress">In progress</MenuItem>
+                                <MenuItem value="Closed">Closed</MenuItem>
+                                <MenuItem value="Archived">Archived</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
                     </CardActions>
                 </Card>
             </div>

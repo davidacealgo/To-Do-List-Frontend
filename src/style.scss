@@ -1,3 +1,9 @@
+.assignUser{
+    & .MuiFormControl-root{
+        min-width: 104px !important;
+    }
+    margin: 2px;
+}
 .button{
     margin: 10px;
 }
@@ -5,13 +11,19 @@
     & .MuiPaper-root {
         background-color: #d5f4e6;
         margin: 15px 7px;
-        width: 250px;
+        width: 270px;
     }
 }
 .bullet{
     display: 'inline-block';
     margin: '0px 2px';
     transform: 'scale(0.8)';
+}
+.changeStatus{
+    & .MuiFormControl-root{
+        min-width: 125px !important;
+    }
+    margin: 2px;
 }
 .gridList{
     & .MuiGrid-spacing-xs-1 > .MuiGrid-item{
