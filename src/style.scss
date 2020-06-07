@@ -1,0 +1,37 @@
+.button{
+    margin: 10px;
+}
+.task{
+    & .MuiPaper-root {
+        background-color: #d5f4e6;
+        margin: 15px 7px;
+        width: 250px;
+    }
+}
+.bullet{
+    display: 'inline-block';
+    margin: '0px 2px';
+    transform: 'scale(0.8)';
+}
+.gridList{
+    & .MuiGrid-spacing-xs-1 > .MuiGrid-item{
+        padding: 12px 0px 0px 0px
+    }
+}
+.listTasks{
+    display: 'flex';
+    flex-wrap: 'wrap';
+    justify-content: space-around;
+    overflow: hidden;
+    background-color: white;
+}
+.title{
+    font-size: 14px;
+    margin-bottom: 10px;
+    & .MuiTypography-root {
+        margin-bottom: 10px;
+    }
+}
+.pos{
+    margin-bottom: 10px;
+}
