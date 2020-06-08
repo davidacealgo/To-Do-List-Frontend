@@ -26,7 +26,7 @@ export default class TaskList extends Component {
         if(nextProps.listChange !== this.props.listChange)
           this.setState({listChange: !this.props.listChange});
     }   
-    
+
     componentDidMount = () => {
         axios.get("http://localhost:3000/tasks").then(response => {
             this.setState({
@@ -49,7 +49,6 @@ export default class TaskList extends Component {
                 console.log(response.data);
         });
         this.setState({idTask: idTask, listChange: !this.state.listChange})
-        this.props.listChange();
     }
 
     changeStatus(task, idTask) {

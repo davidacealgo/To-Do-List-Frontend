@@ -14,6 +14,7 @@ export default class App extends Component {
   }      
 
   componentDidUpdate(prevState){
+      debugger;
       if(this.state.change !== prevState.change){
           console.log('cambió');
       }
