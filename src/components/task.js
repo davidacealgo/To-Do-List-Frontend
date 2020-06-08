@@ -18,12 +18,12 @@ export default class Task extends Component {
         super(props);
         this.state = {
             id: this.props.id,
-            title: this.props.title,
-            description: this.props.description,
-            state: this.props.state,
+            title: "",
+            description: "",
+            state: "",
             created: this.props.created,
-            user: this.props.user,
-            users : []
+            user: "",
+            users: []
         };
         this.assignUserToTask = this.assignUserToTask.bind(this);
         this.changeStatus = this.changeStatus.bind(this);
@@ -39,13 +39,23 @@ export default class Task extends Component {
         });
     }
 
+    static getDerivedStateFromProps(props, state){
+        console.log(props.title);
+        return{
+            title: props.title,
+            description: props.description,
+            state: props.state,
+            user: props.user
+        }
+    }
+
     assignUserToTask(event) {
         let user = this.state.users.filter(user => user.firstName === event.target.value);
         let userId = user[0]._id;
         userId = JSON.parse(`{"user": "${userId}"}`);
         axios.put(`http://localhost:3000/tasks/${this.state.id}/user/`, 
             userId).then(response => {
-                console.log(response.data);
+                //console.log(response.data);
         });
     }
 
@@ -53,11 +63,21 @@ export default class Task extends Component {
         let status = JSON.parse(`{"status": "${event.target.value}"}`);
         axios.put(`http://localhost:3000/tasks/${this.state.id}`, 
             status).then(response => {
-                console.log(response.data);
+                //console.log(response.data);
         });
+        console.log(this.state.state);
         this.setState({
-            state: event.target.value
+            state: event.target.value,
+            onChange: !this.state.onChange
         })
+        console.log(this.state.state);
+
+    }
+
+    componentDidUpdate(prevState){
+        if(this.state.state !== prevState.state){
+            console.log('cambió');
+        }
     }
 
     getNames(id) {
@@ -91,7 +111,7 @@ export default class Task extends Component {
                             {this.state.created.substring(0,10)}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            User: {this.getNames(this.state.user)}
+                            User: {this.getNames(this.props.user)}
                         </Typography>
                     </CardContent>
                     <CardActions>
@@ -146,5 +166,5 @@ Task.propTypes = {
     description: PropTypes.string.isRequired,
     created: PropTypes.string.isRequired,
     user: PropTypes.string.isRequired,
-    users: PropTypes.array
+    onChange: PropTypes.bool.isRequired
 };

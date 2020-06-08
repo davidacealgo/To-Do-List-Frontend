@@ -11,7 +11,8 @@ export default class TaskList extends Component {
         super(props);
         this.state = {
             list: [],
-            taskState: this.props.taskState
+            taskState: this.props.taskState,
+            onChange: false
         };
     }
     componentDidMount = () => {
@@ -37,6 +38,7 @@ export default class TaskList extends Component {
                                 title={task.title}
                                 description={task.description}
                                 created={task.created_at}
+                                state={task.status}
                                 user={task.user}
                             ></Task>
                     ))}
@@ -46,5 +48,6 @@ export default class TaskList extends Component {
 }
 
 TaskList.propTypes = {
-    taskState: PropTypes.string.isRequired
+    taskState: PropTypes.string.isRequired,
+    state: PropTypes.bool
 };
