@@ -1,5 +1,4 @@
 import React, { Component} from 'react';
-import axios from 'axios';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -16,38 +15,40 @@ export default class Task extends Component {
         super(props);
         this.state = {
             id: props.id,
-            title: "",
-            description: "",
-            state: "",
+            title: props.title,
+            description: props.description,
+            status: props.status,
             created: props.created,
             onChangeState: props.onChangeState,
             onChangeUser: props.onChangeUser,
-            user: "",
-            users: []
+            user: props.user,
+            users: props.users // Esto se recibe desde el props -> El get request lo tenes que hacer en el App.js
         };
         this.getNames = this.getNames.bind(this);
     }
 
     componentDidMount() {
-        axios.get("http://localhost:3000/users").then(response => {
+        /*axios.get("http://localhost:3000/users").then(response => {
             this.setState({
                 users : response.data
             })
         });
-    }
+    */    }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.title !== this.props.title)
             this.setState({title: nextProps.title})
         if(nextProps.description !== this.props.description)
             this.setState({description: nextProps.description})
-        if(nextProps.state !== this.props.state)
-            this.setState({state: nextProps.state})
+        if(nextProps.status !== this.props.status)
+            this.setState({status: nextProps.status})
         if(nextProps.user !== this.props.user)
             this.setState({user: nextProps.user})
+        if(nextProps.users !== this.props.users)
+            this.setState({users: nextProps.users})
     }
 
-    handleChangeUser = event => {
+    handleUser = event => {
         const user = event.target.value;
         this.props.onChangeUser(user, this.state.id);
     }
@@ -59,18 +60,12 @@ export default class Task extends Component {
 
     getNames(id) {
         if(typeof id === 'undefined' || !this.state.users){
-            return 'No asignado'
+            return 'Not assigned'
         } else {
             const user = this.state.users.filter(user => user._id === id);
             if (typeof(user[0]) !== 'undefined')
                 return(`${user[0].firstName} ${user[0].lastName}` );
-        }
-        //console.log(user[0].firstName);
-        //return(`${user[0].firstName} ${user[0].lastName}`)
-        /*user.map((u) =>{
-            console.log(u.firstName);
-            return(`"${u.firstName}" "${u.lastName}"`)
-        });*/    
+        }    
     }
 
     render() {
@@ -88,22 +83,23 @@ export default class Task extends Component {
                             {this.state.created.substring(0,10)}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            User: {this.getNames(this.props.user)}
+                            User: 
                         </Typography>
                     </CardContent>
                     <CardActions>
                         <div className="assignUser">
                             <FormControl>
-                                <InputLabel id="assign-user-input">Assign user</InputLabel>
+                                <InputLabel id="assign-user-input">User</InputLabel>
                                 <Select
-                                  labelId="assign-user"
-                                  id="assign-user-select"
-                                  onChange={this.handleChangeUser}
+                                    value=""
+                                    labelId="assign-user"
+                                    id="assign-user-select"
+                                    onChange={this.handleUser}
                                 >
                                 {
                                     this.state.users.map((user) =>{
                                         return (
-                                            <MenuItem value={user.firstName}>{user.firstName}</MenuItem>
+                                            <MenuItem key={user} value={user.firstName}>{user.firstName}</MenuItem>
                                         );
                                     })
                                 }
@@ -112,12 +108,13 @@ export default class Task extends Component {
                         </div>
                         <div className="changeStatus">
                             <FormControl>
-                                <InputLabel id="assign-user-input">Change status</InputLabel>
+                                <InputLabel id="assign-user-input">Status</InputLabel>
                                 <Select
+                                  value = {this.state.status}
                                   labelId="change-status"
                                   id="change-status-select"
                                   onChange={this.handleState}
-                                >
+                                > 
                                 <MenuItem value="Open">Open</MenuItem>
                                 <MenuItem value="In progress">In progress</MenuItem>
                                 <MenuItem value="Closed">Closed</MenuItem>
@@ -142,7 +139,8 @@ Task.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     created: PropTypes.string.isRequired,
-    user: PropTypes.string.isRequired,
+    user: PropTypes.string,
+    users: PropTypes.array,
     onChangeState: PropTypes.func,
     onChangeUser: PropTypes.func
 };
