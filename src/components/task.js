@@ -11,7 +11,6 @@ import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import "../style.scss";
 
-
 export default class Task extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +26,6 @@ export default class Task extends Component {
             users: []
         };
         this.getNames = this.getNames.bind(this);
-
     }
 
     componentDidMount() {
@@ -45,7 +43,6 @@ export default class Task extends Component {
             this.setState({description: nextProps.description})
         if(nextProps.state !== this.props.state)
             this.setState({state: nextProps.state})
-        console.log(this.props.state);
         if(nextProps.user !== this.props.user)
             this.setState({user: nextProps.user})
     }
@@ -58,12 +55,6 @@ export default class Task extends Component {
     handleState = event => {
         const task = event.target.value;
         this.props.onChangeState(task, this.state.id);
-    }
-
-    componentDidUpdate(prevState){
-        if(this.state.user !== prevState.user){
-            console.log('cambió');
-        }
     }
 
     getNames(id) {
