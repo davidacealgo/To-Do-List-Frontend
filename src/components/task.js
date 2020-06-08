@@ -1,6 +1,5 @@
 import React, { Component} from 'react';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -17,16 +16,16 @@ export default class Task extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: this.props.id,
+            id: props.id,
             title: "",
             description: "",
             state: "",
-            created: this.props.created,
+            created: props.created,
+            onChangeState: props.onChangeState,
+            onChangeUser: props.onChangeUser,
             user: "",
             users: []
         };
-        this.assignUserToTask = this.assignUserToTask.bind(this);
-        this.changeStatus = this.changeStatus.bind(this);
         this.getNames = this.getNames.bind(this);
 
     }
@@ -39,43 +38,30 @@ export default class Task extends Component {
         });
     }
 
-    static getDerivedStateFromProps(props, state){
-        console.log(props.title);
-        return{
-            title: props.title,
-            description: props.description,
-            state: props.state,
-            user: props.user
-        }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.title !== this.props.title)
+            this.setState({title: nextProps.title})
+        if(nextProps.description !== this.props.description)
+            this.setState({description: nextProps.description})
+        if(nextProps.state !== this.props.state)
+            this.setState({state: nextProps.state})
+        console.log(this.props.state);
+        if(nextProps.user !== this.props.user)
+            this.setState({user: nextProps.user})
     }
 
-    assignUserToTask(event) {
-        let user = this.state.users.filter(user => user.firstName === event.target.value);
-        let userId = user[0]._id;
-        userId = JSON.parse(`{"user": "${userId}"}`);
-        axios.put(`http://localhost:3000/tasks/${this.state.id}/user/`, 
-            userId).then(response => {
-                //console.log(response.data);
-        });
+    handleChangeUser = event => {
+        const user = event.target.value;
+        this.props.onChangeUser(user, this.state.id);
     }
 
-    changeStatus(event) {
-        let status = JSON.parse(`{"status": "${event.target.value}"}`);
-        axios.put(`http://localhost:3000/tasks/${this.state.id}`, 
-            status).then(response => {
-                //console.log(response.data);
-        });
-        console.log(this.state.state);
-        this.setState({
-            state: event.target.value,
-            onChange: !this.state.onChange
-        })
-        console.log(this.state.state);
-
+    handleState = event => {
+        const task = event.target.value;
+        this.props.onChangeState(task, this.state.id);
     }
 
     componentDidUpdate(prevState){
-        if(this.state.state !== prevState.state){
+        if(this.state.user !== prevState.user){
             console.log('cambió');
         }
     }
@@ -121,7 +107,7 @@ export default class Task extends Component {
                                 <Select
                                   labelId="assign-user"
                                   id="assign-user-select"
-                                  onChange={this.assignUserToTask}
+                                  onChange={this.handleChangeUser}
                                 >
                                 {
                                     this.state.users.map((user) =>{
@@ -139,7 +125,7 @@ export default class Task extends Component {
                                 <Select
                                   labelId="change-status"
                                   id="change-status-select"
-                                  onChange={this.changeStatus}
+                                  onChange={this.handleState}
                                 >
                                 <MenuItem value="Open">Open</MenuItem>
                                 <MenuItem value="In progress">In progress</MenuItem>
@@ -166,5 +152,6 @@ Task.propTypes = {
     description: PropTypes.string.isRequired,
     created: PropTypes.string.isRequired,
     user: PropTypes.string.isRequired,
-    onChange: PropTypes.bool.isRequired
+    onChangeState: PropTypes.func,
+    onChangeUser: PropTypes.func
 };
