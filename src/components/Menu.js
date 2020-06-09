@@ -1,12 +1,14 @@
 
 import React, { Component} from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import MuiAlert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
+import Snackbar from '@material-ui/core/Snackbar';
+import TextField from '@material-ui/core/TextField';
 import "../style.scss";
 
 
@@ -19,11 +21,17 @@ export default class TopBar extends Component {
             onCreateTask: props.onCreateTask,
             onCreateUser: props.onCreateUser,
             inputTitle: '',
-            inputDescription: ''
+            inputDescription: '',
+            message: '',
+            success: false
         };
         this.handleCreateTask = this.handleCreateTask.bind(this);
         this.handleCreateUser = this.handleCreateUser.bind(this);
     }
+
+	Alert(props){
+		return <MuiAlert elevation={6} variant="filled" {...props} />;
+	}
 
     handleClickUser = (event) => {
     	console.log(event);
@@ -34,8 +42,12 @@ export default class TopBar extends Component {
     	this.setState({openTask: true});
     };
 
+    handleCloseAlert = () => {
+    	this.setState({success: false})
+    }
+
     handleCloseUser = () => {
-        this.setState({openUser: false});
+        this.setState({openUser: false})
     };
 
     handleCloseTask = () => {
@@ -48,19 +60,19 @@ export default class TopBar extends Component {
 
     handleCreateTask(){
     	this.props.onCreateTask(this.state.inputTitle, this.state.inputDescription);
-    	this.setState({openTask: false});
+    	this.setState({openTask: false, success: true, message: "Task"});
     }
 
     handleCreateUser(){
     	this.props.onCreateUser(this.state.inputFirstName, this.state.inputLastName);
-    	this.setState({openUser: false});
+    	this.setState({openUser: false, success: true, message: "User"});
     }
 
     render() {
         return(  
         	<div className="list">
-        		<div>
-	                <Button variant="outlined" color="primary" name="openUser" onClick={this.handleClickUser}>
+        		<div className="buttonList">
+	                <Button className="button" variant="outlined" name="openUser" onClick={this.handleClickUser}>
 			        	Create User
 			      	</Button>
 			      	<Dialog open={this.state.openUser} onClose={this.handleCloseUser} aria-labelledby="form-dialog-title">
@@ -90,7 +102,7 @@ export default class TopBar extends Component {
 				          </div>
 				        </DialogContent>
 				        <DialogActions>
-				          <Button onClick={this.handleCloseUser} color="primary">
+				          <Button onClick={this.handleCloseUser} color="secondary">
 				            Cancel
 				          </Button>
 				          <Button onClick={this.handleCreateUser} color="primary">
@@ -99,7 +111,7 @@ export default class TopBar extends Component {
 				        </DialogActions>
 			      	</Dialog>
 		      	</div>
-		      	<div>
+		      	<div className="buttonList">
 			      	<Button variant="outlined" color="primary" onClick={this.handleClickTask}>
 			        	Create task
 			      	</Button>
@@ -133,7 +145,7 @@ export default class TopBar extends Component {
 				          </div>
 				        </DialogContent>
 				        <DialogActions>
-				          <Button onClick={this.handleCloseTask} color="primary">
+				          <Button onClick={this.handleCloseTask} color="secondary">
 				            Cancel
 				          </Button>
 				          <Button onClick={this.handleCreateTask} color="primary">
@@ -142,6 +154,11 @@ export default class TopBar extends Component {
 				        </DialogActions>
 			      	</Dialog>
 		      	</div>
+		      	<Snackbar open={this.state.success} autoHideDuration={20000} onClose={this.handleCloseAlert}>
+		            <this.Alert name="success" id="success" onClose={this.handleCloseAlert} severity="success">
+		            	{`${this.state.message} created successfully!`}
+		            </this.Alert>
+		      </Snackbar>
             </div>
         );
     }

@@ -24,6 +24,7 @@ export default class App extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log(this.state.tasks !== nextState.tasks);
     const validation = (this.state.tasks !== nextState.tasks || this.state.users !== nextState.users)
     return validation
   }
@@ -80,14 +81,12 @@ export default class App extends Component {
   }
 
   createTask(title, description){
-    const tasks = this.state.tasks;
     const body = JSON.parse(`{"title": "${title}", "description": "${description}"}`);
     axios.post('http://localhost:3000/tasks/',
       body).then(response => {
-        tasks.push(response.data);
-        console.log(tasks);
-        this.setState({tasks});
-        console.log(this.state.tasks);
+        this.setState({
+          tasks: [...this.state.tasks, response.data]
+        })
       });
   }
 
@@ -95,7 +94,9 @@ export default class App extends Component {
     const body = JSON.parse(`{"firstName": "${firstName}", "lastName": "${lastName}"}`);
     axios.post('http://localhost:3000/users/',
       body).then(response => {
-        console.log(response.data);
+        this.setState({
+          users: [...this.state.users, response.data]
+        })
       });
   }
 

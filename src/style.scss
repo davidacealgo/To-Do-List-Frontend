@@ -1,3 +1,6 @@
+.App{
+    
+}
 .actions{
     justify-content: space-between
 }
@@ -7,8 +10,15 @@
     }
     margin: 2px;
 }
-.button{
-    margin: 10px;
+.buttonList{
+    margin-bottom: 10px;
+    & .MuiButton-root:hover{
+        color: black;
+    }
+    & .MuiButtonBase-root{
+        background: rgba(3, 79, 132, 0.7);
+        color: white;
+    }
 }
 .task{
     & .MuiPaper-root {
@@ -28,7 +38,6 @@
     }
 }
 .list{
-    background: rgba(247, 120, 107, 0.4);
     margin: 8px;
 }
 .listTasks{
