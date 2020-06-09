@@ -27,25 +27,17 @@ export default class Task extends Component {
         this.getNames = this.getNames.bind(this);
     }
 
-    componentDidMount() {
-        /*axios.get("http://localhost:3000/users").then(response => {
-            this.setState({
-                users : response.data
-            })
-        });
-    */    }
-
-    componentWillReceiveProps(nextProps){
-        if(nextProps.title !== this.props.title)
-            this.setState({title: nextProps.title})
-        if(nextProps.description !== this.props.description)
-            this.setState({description: nextProps.description})
-        if(nextProps.status !== this.props.status)
-            this.setState({status: nextProps.status})
-        if(nextProps.user !== this.props.user)
-            this.setState({user: nextProps.user})
-        if(nextProps.users !== this.props.users)
-            this.setState({users: nextProps.users})
+    componentDidUpdate(prevProps){
+        if(prevProps.title !== this.props.title)
+            this.setState({title: this.props.title})
+        if(prevProps.description !== this.props.description)
+            this.setState({description: this.props.description})
+        if(prevProps.status !== this.props.status)
+            this.setState({status: this.props.status})
+        if(prevProps.user !== this.props.user)
+            this.setState({user: this.props.user})
+        if(prevProps.users !== this.props.users)
+            this.setState({users: this.props.users})
     }
 
     handleUser = event => {
@@ -83,23 +75,24 @@ export default class Task extends Component {
                             {this.state.created.substring(0,10)}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            User: 
+                            User: {this.getNames(this.state.user)}
                         </Typography>
                     </CardContent>
-                    <CardActions>
+                    <CardActions className="actions">
                         <div className="assignUser">
-                            <FormControl>
+                            <FormControl className="FormControl">
                                 <InputLabel id="assign-user-input">User</InputLabel>
                                 <Select
                                     value=""
                                     labelId="assign-user"
                                     id="assign-user-select"
                                     onChange={this.handleUser}
+                                    noderef = {this.selectRef}
                                 >
                                 {
                                     this.state.users.map((user) =>{
                                         return (
-                                            <MenuItem key={user} value={user.firstName}>{user.firstName}</MenuItem>
+                                            <MenuItem key={user._id} value={user.firstName}>{`${user.firstName} ${user.lastName}`}</MenuItem>
                                         );
                                     })
                                 }
@@ -107,13 +100,14 @@ export default class Task extends Component {
                             </FormControl>
                         </div>
                         <div className="changeStatus">
-                            <FormControl>
+                            <FormControl className="FormControl">
                                 <InputLabel id="assign-user-input">Status</InputLabel>
                                 <Select
-                                  value = {this.state.status}
-                                  labelId="change-status"
-                                  id="change-status-select"
-                                  onChange={this.handleState}
+                                    noderef = {this.selectRef}
+                                    value = {this.state.status}
+                                    labelId="change-status"
+                                    id="change-status-select"
+                                    onChange={this.handleState}
                                 > 
                                 <MenuItem value="Open">Open</MenuItem>
                                 <MenuItem value="In progress">In progress</MenuItem>

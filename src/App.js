@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import ListTask from './components/listTask';
-import UserList from './components/listUsers';
+import Menu from './components/Menu';
+import Typography from '@material-ui/core/Typography';
 import './style.scss';
 
 export default class App extends Component {
@@ -74,42 +75,58 @@ export default class App extends Component {
       });
       return {tasks}
     });
-  } 
+  }
+
+  createTask(){
+    console.log("create task");
+  }
 
   render() {
     return (
       <div className="App">
+        <Menu
+          createTaskHandler={this.createTask}
+        ></Menu>
         <Grid container spacing={1} className="gridList">
           <Grid item xs={3}>
+            <Typography variant="h5" className="listTaskTitle">
+                Open
+            </Typography>
             <ListTask 
               tasks={this.retrieveTaskByStatus('Open')}
               users={this.state.users}
               changeStatusHandler={this.changeStatus}
-              changeUserHandler={this.assignUserToTask}></ListTask>
+              changeUserHandler={this.assignUserToTask}>Open</ListTask>
           </Grid>
           <Grid item xs={3}>
+          <Typography variant="h5" className="listTaskTitle">
+                In progress
+            </Typography>
             <ListTask 
               tasks={this.retrieveTaskByStatus('In progress')} 
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
-              changeUserHandler={this.assignUserToTask}></ListTask>
+              changeUserHandler={this.assignUserToTask}>In progress</ListTask>
           </Grid>
           <Grid item xs={3}>
+            <Typography variant="h5" className="listTaskTitle">
+                Closed
+            </Typography>
             <ListTask 
               tasks={this.retrieveTaskByStatus('Closed')}  
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
-              changeUserHandler={this.assignUserToTask}></ListTask>
+              changeUserHandler={this.assignUserToTask}>Closed</ListTask>
           </Grid>
           <Grid item xs={3}>
+            <Typography variant="h5" className="listTaskTitle">
+                Archived
+            </Typography>
             <ListTask 
               tasks={this.retrieveTaskByStatus('Archived')}  
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
-              changeUserHandler={this.assignUserToTask}></ListTask>
-          </Grid>
-          <Grid item xs={1}>
-            <UserList></UserList>
+              changeUserHandler={this.assignUserToTask}>Archived</ListTask>
           </Grid>
         </Grid>
       </div>

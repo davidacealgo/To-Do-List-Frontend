@@ -1,3 +1,6 @@
+.actions{
+    justify-content: space-between
+}
 .assignUser{
     & .MuiFormControl-root{
         min-width: 104px !important;
@@ -11,7 +14,7 @@
     & .MuiPaper-root {
         background-color: #d5f4e6;
         margin: 15px 7px;
-        width: 270px;
+        width: inherit;
     }
 }
 .bullet{
@@ -19,16 +22,14 @@
     margin: '0px 2px';
     transform: 'scale(0.8)';
 }
-.changeStatus{
-    & .MuiFormControl-root{
-        min-width: 125px !important;
-    }
-    margin: 2px;
-}
 .gridList{
     & .MuiGrid-spacing-xs-1 > .MuiGrid-item{
         padding: 12px 0px 0px 0px
     }
+}
+.list{
+    background: rgba(247, 120, 107, 0.4);
+    margin: 8px;
 }
 .listTasks{
     display: 'flex';
@@ -37,13 +38,41 @@
     overflow: hidden;
     background-color: white;
 }
+.listTaskTitle{
+    color: #034f84;
+    text-align: center;
+    padding-top: 4px;
+}
+.listTitle{
+    color: #034f84;
+    font-size: 14px;
+    padding-left: 15px;
+    padding-top: 4px;
+}
+.listUsers{
+    max-height: 120px;
+    overflow: auto;
+    width: max-content;
+
+}
 .title{
     font-size: 14px;
     margin-bottom: 10px;
     & .MuiTypography-root {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
 }
 .pos{
     margin-bottom: 10px;
+}
+.formControl{
+    margin: 8px;
+    minWidth: 120px,
+}
+.textField{
+    margin-bottom: 20px;
+}
+.ul{
+    backgroundColor: inherit;
+    padding: 0px;   
 }

@@ -13,12 +13,12 @@ export default class TaskList extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.tasks !== this.props.tasks) {
-            this.setState({tasks: nextProps.tasks});
+    componentDidUpdate(prevProps){
+        if(prevProps.tasks !== this.props.tasks) {
+            this.setState({tasks: this.props.tasks});
         }
-        if(nextProps.users !== this.props.users) {
-            this.setState({users: nextProps.users});
+        if(prevProps.users !== this.props.users) {
+            this.setState({users: this.props.users});
         }
     }   
 

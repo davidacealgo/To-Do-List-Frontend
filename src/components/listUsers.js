@@ -1,8 +1,10 @@
 import React, { Component} from 'react';
 import axios from 'axios';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
 import "../style.scss";
 
 
@@ -10,28 +12,21 @@ export default class UserList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            list: []
+            anchorEl: null,
+            createUserHandler: props.createUserHandler
         };
+        this.handleClick = this.handleClick.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
-    componentDidMount = () => {
-        axios.get("http://localhost:3000/users").then(response => {
-            this.setState({
-                list : response.data
-            })
-        });
-    };
 
+    handleCreateUser = () => {
+
+    }
     render() {
-        return( 
-            <List className="listUsers">
-                {this.state.list.map((user) => {
-                    return (
-                    <ListItem key={user._id}>
-                        <ListItemText primary={`${user.firstName} ${user.lastName}`} />
-                    </ListItem>
-                    );
-                })}
-            </List>
+        return(
+            <div className="list">
+            </div>
         );
     }
 }
+
