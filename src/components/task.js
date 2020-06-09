@@ -1,12 +1,18 @@
 import React, { Component} from 'react';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import FormControl from '@material-ui/core/FormControl';
+import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
+import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import "../style.scss";
 
@@ -21,11 +27,18 @@ export default class Task extends Component {
             created: props.created,
             onChangeState: props.onChangeState,
             onChangeUser: props.onChangeUser,
+            onDeleteUserTask: props.onDeleteUserTask,
             user: props.user,
             users: props.users // Esto se recibe desde el props -> El get request lo tenes que hacer en el App.js
         };
         this.getNames = this.getNames.bind(this);
     }
+
+    useStyles = () => makeStyles({
+        tooltip: {
+          background: "white",
+        },
+    });
 
     componentDidUpdate(prevProps){
         if(prevProps.title !== this.props.title)
@@ -60,10 +73,25 @@ export default class Task extends Component {
         }    
     }
 
+    deleteUserTaskHandle = event => {
+        this.props.onDeleteUserTask(this.state.id);
+    }
+
     render() {
+        const classes = this.useStyles();
         return(
             <div className="task">
                 <Card className="task">
+                    <Tooltip title="Delete user of task" classes={classes}>
+                        <IconButton color="secondary" aria-label="delete-task" component="span" onClick={this.deleteUserTaskHandle} variant="outlined">
+                            <DeleteOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edit task" classes={classes}>
+                        <IconButton color="primary" aria-label="delete-task" component="span">
+                            <EditOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
                     <CardContent>
                         <Typography className="title" variant="h5">
                             {this.state.title}
@@ -136,5 +164,6 @@ Task.propTypes = {
     user: PropTypes.string,
     users: PropTypes.array,
     onChangeState: PropTypes.func,
-    onChangeUser: PropTypes.func
+    onChangeUser: PropTypes.func,
+    onDeleteUserTask: PropTypes.func
 };

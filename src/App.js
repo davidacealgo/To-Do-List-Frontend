@@ -17,6 +17,7 @@ export default class App extends Component {
     this.changeStatus = this.changeStatus.bind(this);
     this.createTask = this.createTask.bind(this);
     this.createUser = this.createUser.bind(this);
+    this.deleteUserTask = this.deleteUserTask.bind(this);
   }      
 
   retrieveTaskByStatus = (status) => {
@@ -100,6 +101,23 @@ export default class App extends Component {
       });
   }
 
+  deleteUserTask(idTask){
+    axios.delete(`http://localhost:3000/tasks/${idTask}/user/`)
+      .then(response => {
+            console.log(response.data);
+    });
+    this.setState(prevState => {
+    const tasks = prevState.tasks.map((row, j) => {
+        if(idTask === row._id) {
+          return {...row, user: ""};
+        } else {
+          return row;
+        }
+      });
+      return {tasks}
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -116,7 +134,8 @@ export default class App extends Component {
               tasks={this.retrieveTaskByStatus('Open')}
               users={this.state.users}
               changeStatusHandler={this.changeStatus}
-              changeUserHandler={this.assignUserToTask}>Open</ListTask>
+              changeUserHandler={this.assignUserToTask}
+              deleteUserTaskHandler={this.deleteUserTask}>Open</ListTask>
           </Grid>
           <Grid item xs={3}>
           <Typography variant="h5" className="listTaskTitle">
@@ -126,7 +145,8 @@ export default class App extends Component {
               tasks={this.retrieveTaskByStatus('In progress')} 
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
-              changeUserHandler={this.assignUserToTask}>In progress</ListTask>
+              changeUserHandler={this.assignUserToTask}
+              deleteUserTaskHandler={this.deleteUserTask}>In progress</ListTask>
           </Grid>
           <Grid item xs={3}>
             <Typography variant="h5" className="listTaskTitle">
@@ -136,7 +156,8 @@ export default class App extends Component {
               tasks={this.retrieveTaskByStatus('Closed')}  
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
-              changeUserHandler={this.assignUserToTask}>Closed</ListTask>
+              changeUserHandler={this.assignUserToTask}
+              deleteUserTaskHandler={this.deleteUserTask}>Closed</ListTask>
           </Grid>
           <Grid item xs={3}>
             <Typography variant="h5" className="listTaskTitle">
@@ -146,10 +167,12 @@ export default class App extends Component {
               tasks={this.retrieveTaskByStatus('Archived')}  
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
-              changeUserHandler={this.assignUserToTask}>Archived</ListTask>
+              changeUserHandler={this.assignUserToTask}
+              deleteUserTaskHandler={this.deleteUserTask}>Archived</ListTask>
           </Grid>
         </Grid>
       </div>
     );
   }
 }
+

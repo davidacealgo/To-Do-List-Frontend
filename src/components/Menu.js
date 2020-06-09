@@ -168,3 +168,4 @@ TopBar.propTypes = {
     onCreateTask: PropTypes.func,
     onCreateUser: PropTypes.func
 };
+
