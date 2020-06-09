@@ -15,6 +15,8 @@ export default class App extends Component {
     };
     this.assignUserToTask = this.assignUserToTask.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
+    this.createTask = this.createTask.bind(this);
+    this.createUser = this.createUser.bind(this);
   }      
 
   retrieveTaskByStatus = (status) => {
@@ -60,7 +62,7 @@ export default class App extends Component {
   }
 
   changeStatus(task, idTask) {
-    let status = JSON.parse(`{"status": "${task}"}`);
+    const status = JSON.parse(`{"status": "${task}"}`);
     axios.put(`http://localhost:3000/tasks/${idTask}`, 
         status).then(response => {
             console.log(response.data);
@@ -77,15 +79,32 @@ export default class App extends Component {
     });
   }
 
-  createTask(){
-    console.log("create task");
+  createTask(title, description){
+    const tasks = this.state.tasks;
+    const body = JSON.parse(`{"title": "${title}", "description": "${description}"}`);
+    axios.post('http://localhost:3000/tasks/',
+      body).then(response => {
+        tasks.push(response.data);
+        console.log(tasks);
+        this.setState({tasks});
+        console.log(this.state.tasks);
+      });
+  }
+
+  createUser(firstName, lastName){
+    const body = JSON.parse(`{"firstName": "${firstName}", "lastName": "${lastName}"}`);
+    axios.post('http://localhost:3000/users/',
+      body).then(response => {
+        console.log(response.data);
+      });
   }
 
   render() {
     return (
       <div className="App">
         <Menu
-          createTaskHandler={this.createTask}
+          onCreateTask={this.createTask}
+          onCreateUser={this.createUser}
         ></Menu>
         <Grid container spacing={1} className="gridList">
           <Grid item xs={3}>

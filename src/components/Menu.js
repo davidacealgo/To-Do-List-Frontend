@@ -1,16 +1,12 @@
 
 import React, { Component} from 'react';
-import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import UserList from './listUsers';
 import "../style.scss";
 
 
@@ -21,12 +17,16 @@ export default class TopBar extends Component {
             openUser: false,
             openTask: false,
             onCreateTask: props.onCreateTask,
+            onCreateUser: props.onCreateUser,
             inputTitle: '',
             inputDescription: ''
         };
+        this.handleCreateTask = this.handleCreateTask.bind(this);
+        this.handleCreateUser = this.handleCreateUser.bind(this);
     }
 
     handleClickUser = (event) => {
+    	console.log(event);
     	this.setState({openUser: true});
     };
 
@@ -42,23 +42,25 @@ export default class TopBar extends Component {
         this.setState({openTask: false});
     };
 
-    handleInputTask = (event) => {
+    handleInput = (event) => {
     	this.setState({[event.target.name]: event.target.value})
     }
 
     handleCreateTask(){
-    	console.log("hola");
+    	this.props.onCreateTask(this.state.inputTitle, this.state.inputDescription);
+    	this.setState({openTask: false});
     }
 
     handleCreateUser(){
-    	console.log("hola"+`${this.state.inputTitle}`);
+    	this.props.onCreateUser(this.state.inputFirstName, this.state.inputLastName);
+    	this.setState({openUser: false});
     }
 
     render() {
         return(  
         	<div className="list">
         		<div>
-	                <Button variant="outlined" color="primary" onClick={this.handleClickUser}>
+	                <Button variant="outlined" color="primary" name="openUser" onClick={this.handleClickUser}>
 			        	Create User
 			      	</Button>
 			      	<Dialog open={this.state.openUser} onClose={this.handleCloseUser} aria-labelledby="form-dialog-title">
@@ -68,6 +70,8 @@ export default class TopBar extends Component {
 					          <TextField
 					            autoFocus
 					            margin="dense"
+					            name="inputFirstName"
+					            onChange={this.handleInput}
 					            placeholder="First Name"
 					            id="user-first-name"
 					            type="text"
@@ -76,7 +80,9 @@ export default class TopBar extends Component {
 				          </div>
 				          <div>
 					          <TextField
+					            name="inputLastName"
 					            margin="dense"
+					            onChange={this.handleInput}
 					            placeholder="Last Name"
 					            id="user-last-name"
 					            type="text"
@@ -87,7 +93,7 @@ export default class TopBar extends Component {
 				          <Button onClick={this.handleCloseUser} color="primary">
 				            Cancel
 				          </Button>
-				          <Button onClick={this.handleCloseUser} color="primary">
+				          <Button onClick={this.handleCreateUser} color="primary">
 				            Send
 				          </Button>
 				        </DialogActions>
@@ -107,7 +113,7 @@ export default class TopBar extends Component {
 					            name="inputTitle"
 					            placeholder="Title"
 					            id="task-title"
-					            onChange={this.handleInputTask}
+					            onChange={this.handleInput}
 					            type="text"
 					            fullWidth
 					          />
@@ -120,7 +126,7 @@ export default class TopBar extends Component {
 						        variant="outlined"
 						        rows={3}
 					            label="Description"
-					            onChange={this.handleInputTask}
+					            onChange={this.handleInput}
 					            id="task-description"
 					            type="text"
 					          />
@@ -142,5 +148,6 @@ export default class TopBar extends Component {
 }
 
 TopBar.propTypes = {
-    onCreateTask: PropTypes.func
+    onCreateTask: PropTypes.func,
+    onCreateUser: PropTypes.func
 };
