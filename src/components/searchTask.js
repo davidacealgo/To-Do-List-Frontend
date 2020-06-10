@@ -1,7 +1,17 @@
 import React, { Component} from 'react';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControl from '@material-ui/core/FormControl';
 import InputBase from '@material-ui/core/InputBase';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 import SearchIcon from '@material-ui/icons/Search';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
 import "../style.scss";
 
 
@@ -9,6 +19,8 @@ export default class SearchTask extends Component {
     constructor(props) {
         super(props);
         this.state = {
+        	inputDescription: '',
+      		successTask: props.openTask,
             searchTask: '',
             taskFound: props.taskFound,
             onHandleSearch: props.onHandleSearch
@@ -17,13 +29,27 @@ export default class SearchTask extends Component {
         this.onKeyDown = this.onKeyDown.bind(this);
     }
 
-    componentDidUpdate(prevProps){
+    componentDidMount(){
+		this.setState({description: this.state.taskFound.description})
+    }
+
+    componentDidUpdate(prevProps, prevState){
         if(prevProps.taskFound !== this.props.taskFound)
             this.setState({taskFound: this.props.taskFound})
+        if(prevProps.successTask !== this.props.successTask)
+            this.setState({successTask: this.props.successTask})
+        if(this.state.successTask !== prevState.successTask)
+        	this.setState({successTask: this.state.successTask})
+    }
+
+    getDescription(){
+    	return(`${this.state.taskFound.description}`)
     }
 
 	handleInput = (event) => {
-    	this.setState({[event.target.name]: event.target.value})
+		
+    	const task = Object.keys(this.state.taskFound)
+    		.map.set('description', event.target.value)
     }
 
     onKeyDown(event){
@@ -31,6 +57,10 @@ export default class SearchTask extends Component {
         	this.props.onHandleSearch(event.target.value);
       	}
     }
+
+    handleCloseTask = () => {
+      this.setState({successTask: false, taskFound: []});
+  	};
 
     render() {
     	return(
@@ -46,11 +76,62 @@ export default class SearchTask extends Component {
 	                onChange={this.handleSearchTask}
 	                onKeyDown={this.onKeyDown}
 	            />
-	            {this.state.taskFound.map(task => (
-		          <ul key={task.id}>
-		            <li>{task.title}</li>
-		          </ul>
-		        ))}
+	            <Dialog open={this.state.successTask} onClose={this.handleCloseTask} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Edit task</DialogTitle>
+            <DialogContent>
+              <div className="textField">
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="inputTitle"
+                  placeholder="Title"
+                  id="task-title"
+                  type="text"
+                  fullWidth
+                  value={this.getDescription}
+                />
+              </div>
+              <div>
+                <TextField
+                  margin="dense"
+                  multiline
+                  name="inputDescription"
+                  variant="outlined"
+                  rows={3}
+                  label="Description"
+                  id="task-description"
+                  onChange={this.handleInput}
+                  type="text"
+                  value={this.state.description}
+                />
+              </div>
+              <div className="changeStatus">
+                  <FormControl className="FormControl">
+                      <InputLabel id="assign-user-input">Status</InputLabel>
+                      <Select
+                          noderef = {this.selectRef}
+                          value = {this.state.status}
+                          labelId="change-status"
+                          id="change-status-select"
+                          onChange={this.handleState}
+                      > 
+                      <MenuItem value="Open">Open</MenuItem>
+                      <MenuItem value="In progress">In progress</MenuItem>
+                      <MenuItem value="Closed">Closed</MenuItem>
+                      <MenuItem value="Archived">Archived</MenuItem>
+                      </Select>
+                  </FormControl>
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleCloseTask} color="secondary">
+                Cancel
+              </Button>
+              <Button onClick={this.handleEditTask} color="primary">
+                Send
+              </Button>
+            </DialogActions>
+          </Dialog>
           </div>
         );
         
@@ -59,5 +140,6 @@ export default class SearchTask extends Component {
 
 SearchTask.propTypes = {
 	onHandleSearch: PropTypes.func,
-	taskFound: PropTypes.array
+	successTask: PropTypes.bool,
+	taskFound: PropTypes.object
 }

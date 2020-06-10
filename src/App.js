@@ -5,10 +5,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
 import ListTask from './components/listTask';
 import Menu from './components/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import SearchTask from './components/searchTask';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import './style.scss';
@@ -20,7 +24,7 @@ export default class App extends Component {
       openTask: false,
       tasks: [],
       users: [],
-      taskFound: []
+      taskFound: {}
     };
     this.assignUserToTask = this.assignUserToTask.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
@@ -35,7 +39,6 @@ export default class App extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(this.state.openTask !== nextState.openTask);
     const validation = (this.state.tasks !== nextState.tasks || 
       this.state.users !== nextState.users ||
       this.state.openTask !== nextState.openTask)
@@ -130,10 +133,8 @@ export default class App extends Component {
     });
   }
 
-  handleCloseTask = () => {
-      this.setState({openTask: false});
-  };
   searchTask(task){
+    this.setState({openTask: false})
     const taskFound = this.state.tasks.filter((row) => row.title === task);
     if(Object.keys(taskFound).length !== 0)
     {
@@ -156,6 +157,7 @@ export default class App extends Component {
           onCreateUser={this.createUser}
           onSearchTask={this.searchTask}
           taskFound={this.state.taskFound}
+          openTask={this.state.openTask}
         >{this.state.taskFound}</Menu>
         <Grid container spacing={1} className="gridList">
           <Grid item xs={3}>
@@ -203,44 +205,7 @@ export default class App extends Component {
               deleteUserTaskHandler={this.deleteUserTask}>Archived</ListTask>
           </Grid>
         </Grid>
-        <Dialog open={this.state.openTask} onClose={this.handleCloseTask} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Edit task</DialogTitle>
-            <DialogContent>
-              <div className="textField">
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  name="inputTitle"
-                  placeholder="Title"
-                  id="task-title"
-                  type="text"
-                  fullWidth
-                  value={this.state.taskFound.title}
-                />
-              </div>
-              <div>
-                <TextField
-                  margin="dense"
-                  multiline
-                  name="inputDescription"
-                  variant="outlined"
-                  rows={3}
-                  label="Description"
-                  id="task-description"
-                  type="text"
-                  value={this.state.taskFound.description}
-                />
-              </div>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleCloseTask} color="secondary">
-                Cancel
-              </Button>
-              <Button onClick={this.handleEditTask} color="primary">
-                Send
-              </Button>
-            </DialogActions>
-          </Dialog>
+
       </div>
     );
   }

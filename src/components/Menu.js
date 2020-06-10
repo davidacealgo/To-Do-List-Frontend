@@ -26,11 +26,22 @@ export default class TopBar extends Component {
             inputTitle: '',
             inputDescription: '',
             message: '',
-            success: false
+            success: false,
+            successSearch: props.openTask
         };
         this.handleCreateTask = this.handleCreateTask.bind(this);
         this.handleCreateUser = this.handleCreateUser.bind(this);
     }
+
+
+	componentDidUpdate(prevProps){
+        if(prevProps.taskFound !== this.props.taskFound) {
+            this.setState({taskFound: this.props.taskFound});
+        }
+        if(prevProps.openTask !== this.props.openTask) {
+            this.setState({successSearch: this.props.openTask});
+        }
+    } 
 
 	Alert(props){
 		return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -161,7 +172,7 @@ export default class TopBar extends Component {
 		            	{`${this.state.message} created successfully!`}
 		            </this.Alert>
 		        </Snackbar>
-        		<SearchTask onHandleSearch={this.state.onSearchTask} taskFound={this.state.taskFound}></SearchTask>
+        		<SearchTask onHandleSearch={this.state.onSearchTask} taskFound={this.state.taskFound} successTask={this.state.successSearch}></SearchTask>
             </div>
         );
     }
