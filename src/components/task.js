@@ -34,12 +34,6 @@ export default class Task extends Component {
         this.getNames = this.getNames.bind(this);
     }
 
-    useStyles = () => makeStyles({
-        tooltip: {
-          background: "white",
-        },
-    });
-
     componentDidUpdate(prevProps){
         if(prevProps.title !== this.props.title)
             this.setState({title: this.props.title})
@@ -78,16 +72,15 @@ export default class Task extends Component {
     }
 
     render() {
-        const classes = this.useStyles();
         return(
             <div className="task">
                 <Card className="task">
-                    <Tooltip title="Delete user of task" classes={classes}>
+                    <Tooltip title="Delete user of task">
                         <IconButton color="secondary" aria-label="delete-task" component="span" onClick={this.deleteUserTaskHandle} variant="outlined">
                             <DeleteOutlinedIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Edit task" classes={classes}>
+                    <Tooltip title="Edit task">
                         <IconButton color="primary" aria-label="delete-task" component="span">
                             <EditOutlinedIcon />
                         </IconButton>

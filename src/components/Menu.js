@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MuiAlert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
+import SearchTask from './searchTask';
 import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
 import "../style.scss";
@@ -20,6 +21,8 @@ export default class TopBar extends Component {
             openTask: false,
             onCreateTask: props.onCreateTask,
             onCreateUser: props.onCreateUser,
+            onSearchTask: props.onSearchTask,
+            taskFound: props.taskFound,
             inputTitle: '',
             inputDescription: '',
             message: '',
@@ -34,7 +37,6 @@ export default class TopBar extends Component {
 	}
 
     handleClickUser = (event) => {
-    	console.log(event);
     	this.setState({openUser: true});
     };
 
@@ -158,7 +160,8 @@ export default class TopBar extends Component {
 		            <this.Alert name="success" id="success" onClose={this.handleCloseAlert} severity="success">
 		            	{`${this.state.message} created successfully!`}
 		            </this.Alert>
-		      </Snackbar>
+		        </Snackbar>
+        		<SearchTask onHandleSearch={this.state.onSearchTask} taskFound={this.state.taskFound}></SearchTask>
             </div>
         );
     }

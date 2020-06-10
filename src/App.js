@@ -1,8 +1,15 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import ListTask from './components/listTask';
 import Menu from './components/Menu';
+import SearchTask from './components/searchTask';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import './style.scss';
 
@@ -10,14 +17,17 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openTask: false,
       tasks: [],
-      users: []
+      users: [],
+      taskFound: []
     };
     this.assignUserToTask = this.assignUserToTask.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
     this.createTask = this.createTask.bind(this);
     this.createUser = this.createUser.bind(this);
     this.deleteUserTask = this.deleteUserTask.bind(this);
+    this.searchTask = this.searchTask.bind(this);
   }      
 
   retrieveTaskByStatus = (status) => {
@@ -25,8 +35,10 @@ export default class App extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(this.state.tasks !== nextState.tasks);
-    const validation = (this.state.tasks !== nextState.tasks || this.state.users !== nextState.users)
+    console.log(this.state.openTask !== nextState.openTask);
+    const validation = (this.state.tasks !== nextState.tasks || 
+      this.state.users !== nextState.users ||
+      this.state.openTask !== nextState.openTask)
     return validation
   }
 
@@ -118,13 +130,33 @@ export default class App extends Component {
     });
   }
 
+  handleCloseTask = () => {
+      this.setState({openTask: false});
+  };
+  searchTask(task){
+    const taskFound = this.state.tasks.filter((row) => row.title === task);
+    if(Object.keys(taskFound).length !== 0)
+    {
+      axios.get(`http://localhost:3000/tasks/${taskFound[0]._id}`)
+          .then(response => {
+            console.log(response.data);
+            this.setState({ taskFound: response.data, openTask: true });
+          });
+    } else {
+      //this.setState({taskFound})
+    }
+  }
+
   render() {
     return (
+
       <div className="App">
         <Menu
           onCreateTask={this.createTask}
           onCreateUser={this.createUser}
-        ></Menu>
+          onSearchTask={this.searchTask}
+          taskFound={this.state.taskFound}
+        >{this.state.taskFound}</Menu>
         <Grid container spacing={1} className="gridList">
           <Grid item xs={3}>
             <Typography variant="h5" className="listTaskTitle">
@@ -171,6 +203,44 @@ export default class App extends Component {
               deleteUserTaskHandler={this.deleteUserTask}>Archived</ListTask>
           </Grid>
         </Grid>
+        <Dialog open={this.state.openTask} onClose={this.handleCloseTask} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Edit task</DialogTitle>
+            <DialogContent>
+              <div className="textField">
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="inputTitle"
+                  placeholder="Title"
+                  id="task-title"
+                  type="text"
+                  fullWidth
+                  value={this.state.taskFound.title}
+                />
+              </div>
+              <div>
+                <TextField
+                  margin="dense"
+                  multiline
+                  name="inputDescription"
+                  variant="outlined"
+                  rows={3}
+                  label="Description"
+                  id="task-description"
+                  type="text"
+                  value={this.state.taskFound.description}
+                />
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleCloseTask} color="secondary">
+                Cancel
+              </Button>
+              <Button onClick={this.handleEditTask} color="primary">
+                Send
+              </Button>
+            </DialogActions>
+          </Dialog>
       </div>
     );
   }

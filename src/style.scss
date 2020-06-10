@@ -39,13 +39,14 @@
 }
 .list{
     margin: 8px;
+    text-align: -webkit-center;
 }
 .listTasks{
     display: 'flex';
     flex-wrap: 'wrap';
     justify-content: space-around;
     overflow: hidden;
-    background-color: white;
+    background-color: lemonchiffon;
 }
 .listTaskTitle{
     color: #034f84;
@@ -85,7 +86,27 @@
     backgroundColor: inherit;
     padding: 0px;   
 }
-.tooltip{
+.search{
+    position: relative;
+    border-radius: 10%;
+    background-color: rgba(255, 255, 255, 0.5);
+    & .hover {
+      background-color: rgba(255, 255, 255, 5);
+    }
+    margin-right: 8px;
+    margin-left: 0px;
+    outline-color: #d6cbd3;
+    outline-style: outset;
+    outline-width: 2px;
+    width: 23%;
+}
+.searchIcon{
+    padding: 8px;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
 }
 .task{
     & .MuiButtonBase-root{
