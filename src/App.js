@@ -11,7 +11,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import ListTask from './components/listTask';
 import Menu from './components/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import MuiAlert from '@material-ui/lab/Alert';
 import SearchTask from './components/searchTask';
+import Snackbar from '@material-ui/core/Snackbar';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -24,6 +26,7 @@ export default class App extends Component {
       openTask: false,
       tasks: [],
       users: [],
+      searchError: false,
       taskFound: {}
     };
     this.assignUserToTask = this.assignUserToTask.bind(this);
@@ -31,8 +34,13 @@ export default class App extends Component {
     this.createTask = this.createTask.bind(this);
     this.createUser = this.createUser.bind(this);
     this.deleteUserTask = this.deleteUserTask.bind(this);
+    this.editTask = this.editTask.bind(this);
     this.searchTask = this.searchTask.bind(this);
   }      
+
+  Alert(props){
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   retrieveTaskByStatus = (status) => {
     return this.state.tasks.filter((row) => row.status === status);
@@ -41,7 +49,8 @@ export default class App extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const validation = (this.state.tasks !== nextState.tasks || 
       this.state.users !== nextState.users ||
-      this.state.openTask !== nextState.openTask)
+      this.state.openTask !== nextState.openTask ||
+      this.state.searchError !== nextState.searchError) 
     return validation
   }
 
@@ -78,8 +87,8 @@ export default class App extends Component {
     });
   }
 
-  changeStatus(task, idTask) {
-    const status = JSON.parse(`{"status": "${task}"}`);
+  changeStatus(newStatus, idTask) {
+    const status = JSON.parse(`{"status": "${newStatus}"}`);
     axios.put(`http://localhost:3000/tasks/${idTask}`, 
         status).then(response => {
             console.log(response.data);
@@ -87,7 +96,7 @@ export default class App extends Component {
     this.setState(prevState => {
     const tasks = prevState.tasks.map((row, j) => {
         if(idTask === row._id) {
-          return {...row, status: task};
+          return {...row, status: newStatus};
         } else {
           return row;
         }
@@ -133,18 +142,41 @@ export default class App extends Component {
     });
   }
 
+  editTask(idTask, description, title, status){
+    const task = JSON.parse(`{"description": "${description}", "title": "${title}", "status": "${status}"}`);
+    axios.put(`http://localhost:3000/tasks/${idTask}`, 
+        task).then(response => {
+            console.log(response.data);
+    });
+    this.setState(prevState => {
+    const tasks = prevState.tasks.map((row, j) => {
+        if(idTask === row._id) {
+          return {...row, title: title, description: description, status: status};
+        } else {
+          return row;
+        }
+      });
+      return {tasks}
+    });
+  }
+
+  handleCloseAlert = () => {
+      this.setState({searchError: false})
+  }
+
   searchTask(task){
     this.setState({openTask: false})
-    const taskFound = this.state.tasks.filter((row) => row.title === task);
+    const taskFound = this.state.tasks.filter((row) => row.title.toLowerCase() === task.toLowerCase());
     if(Object.keys(taskFound).length !== 0)
     {
       axios.get(`http://localhost:3000/tasks/${taskFound[0]._id}`)
           .then(response => {
             console.log(response.data);
-            this.setState({ taskFound: response.data, openTask: true });
+            this.setState({ taskFound: response.data, openTask: true, searchError: false });
           });
     } else {
-      //this.setState({taskFound})
+      console.log("hi");
+      this.setState({searchError: true})
     }
   }
 
@@ -160,7 +192,7 @@ export default class App extends Component {
           openTask={this.state.openTask}
         >{this.state.taskFound}</Menu>
         <Grid container spacing={1} className="gridList">
-          <Grid item xs={3}>
+          <Grid item xs={3} className="openList">
             <Typography variant="h5" className="listTaskTitle">
                 Open
             </Typography>
@@ -169,7 +201,8 @@ export default class App extends Component {
               users={this.state.users}
               changeStatusHandler={this.changeStatus}
               changeUserHandler={this.assignUserToTask}
-              deleteUserTaskHandler={this.deleteUserTask}>Open</ListTask>
+              deleteUserTaskHandler={this.deleteUserTask}
+              editTask={this.editTask}>Open</ListTask>
           </Grid>
           <Grid item xs={3}>
           <Typography variant="h5" className="listTaskTitle">
@@ -180,7 +213,8 @@ export default class App extends Component {
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
               changeUserHandler={this.assignUserToTask}
-              deleteUserTaskHandler={this.deleteUserTask}>In progress</ListTask>
+              deleteUserTaskHandler={this.deleteUserTask}
+              editTask={this.editTask}>In progress</ListTask>
           </Grid>
           <Grid item xs={3}>
             <Typography variant="h5" className="listTaskTitle">
@@ -191,7 +225,8 @@ export default class App extends Component {
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
               changeUserHandler={this.assignUserToTask}
-              deleteUserTaskHandler={this.deleteUserTask}>Closed</ListTask>
+              deleteUserTaskHandler={this.deleteUserTask}
+              editTask={this.editTask}>Closed</ListTask>
           </Grid>
           <Grid item xs={3}>
             <Typography variant="h5" className="listTaskTitle">
@@ -202,12 +237,18 @@ export default class App extends Component {
               users={this.state.users} 
               changeStatusHandler={this.changeStatus}
               changeUserHandler={this.assignUserToTask}
-              deleteUserTaskHandler={this.deleteUserTask}>Archived</ListTask>
+              deleteUserTaskHandler={this.deleteUserTask}
+              editTask={this.editTask}>Archived</ListTask>
           </Grid>
         </Grid>
-
+        <Snackbar open={this.state.searchError} autoHideDuration={3000} onClose={this.handleCloseAlert}>
+            <this.Alert name="success" id="success" onClose={this.handleCloseAlert} severity="error">
+              {`Task title not found!`}
+            </this.Alert>
+        </Snackbar>
       </div>
     );
   }
 }
+
 

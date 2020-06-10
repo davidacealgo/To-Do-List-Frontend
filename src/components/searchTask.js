@@ -19,18 +19,11 @@ export default class SearchTask extends Component {
     constructor(props) {
         super(props);
         this.state = {
-        	inputDescription: '',
       		successTask: props.openTask,
-            searchTask: '',
             taskFound: props.taskFound,
-            onHandleSearch: props.onHandleSearch
         };
 
         this.onKeyDown = this.onKeyDown.bind(this);
-    }
-
-    componentDidMount(){
-		this.setState({description: this.state.taskFound.description})
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -38,18 +31,6 @@ export default class SearchTask extends Component {
             this.setState({taskFound: this.props.taskFound})
         if(prevProps.successTask !== this.props.successTask)
             this.setState({successTask: this.props.successTask})
-        if(this.state.successTask !== prevState.successTask)
-        	this.setState({successTask: this.state.successTask})
-    }
-
-    getDescription(){
-    	return(`${this.state.taskFound.description}`)
-    }
-
-	handleInput = (event) => {
-		
-    	const task = Object.keys(this.state.taskFound)
-    		.map.set('description', event.target.value)
     }
 
     onKeyDown(event){
@@ -71,8 +52,8 @@ export default class SearchTask extends Component {
 	            <InputBase
 	            	id="search-task"
 	            	name="searchTask"
-	                placeholder="Search task…"
-	                inputProps={{ 'aria-label': 'search task' }}
+	                placeholder="Search task title…"
+	                inputProps={{ 'aria-label': 'search task', 'error': true }}
 	                onChange={this.handleSearchTask}
 	                onKeyDown={this.onKeyDown}
 	            />
@@ -82,17 +63,20 @@ export default class SearchTask extends Component {
               <div className="textField">
                 <TextField
                   autoFocus
+                  disabled="true"
+                  label="Title"
                   margin="dense"
                   name="inputTitle"
                   placeholder="Title"
                   id="task-title"
                   type="text"
                   fullWidth
-                  value={this.getDescription}
+                  value={this.state.taskFound.title}
                 />
               </div>
               <div>
                 <TextField
+                  disabled="true"
                   margin="dense"
                   multiline
                   name="inputDescription"
@@ -100,20 +84,18 @@ export default class SearchTask extends Component {
                   rows={3}
                   label="Description"
                   id="task-description"
-                  onChange={this.handleInput}
                   type="text"
-                  value={this.state.description}
+                  value={this.state.taskFound.description}
                 />
               </div>
-              <div className="changeStatus">
-                  <FormControl className="FormControl">
+              <div className="searchStatus">
+                  <FormControl className="formSearch" disabled>
                       <InputLabel id="assign-user-input">Status</InputLabel>
                       <Select
                           noderef = {this.selectRef}
-                          value = {this.state.status}
+                          value = {this.state.taskFound.status}
                           labelId="change-status"
                           id="change-status-select"
-                          onChange={this.handleState}
                       > 
                       <MenuItem value="Open">Open</MenuItem>
                       <MenuItem value="In progress">In progress</MenuItem>
@@ -125,10 +107,7 @@ export default class SearchTask extends Component {
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleCloseTask} color="secondary">
-                Cancel
-              </Button>
-              <Button onClick={this.handleEditTask} color="primary">
-                Send
+                Close
               </Button>
             </DialogActions>
           </Dialog>
@@ -143,3 +122,4 @@ SearchTask.propTypes = {
 	successTask: PropTypes.bool,
 	taskFound: PropTypes.object
 }
+

@@ -4,6 +4,10 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,6 +16,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import "../style.scss";
@@ -20,6 +25,10 @@ export default class Task extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            edittTitle: '',
+            editDescription: '',
+            errorTitle: false,
+            errorDescription: false,
             id: props.id,
             title: props.title,
             description: props.description,
@@ -28,10 +37,16 @@ export default class Task extends Component {
             onChangeState: props.onChangeState,
             onChangeUser: props.onChangeUser,
             onDeleteUserTask: props.onDeleteUserTask,
+            onEditTask: props.onEditTask,
             user: props.user,
-            users: props.users // Esto se recibe desde el props -> El get request lo tenes que hacer en el App.js
+            users: props.users,
+            successEdit: false
         };
         this.getNames = this.getNames.bind(this);
+    }
+
+    componentDidMount(){
+        this.setState({editDescription: this.state.description, edittTitle: this.state.title})
     }
 
     componentDidUpdate(prevProps){
@@ -71,9 +86,44 @@ export default class Task extends Component {
         this.props.onDeleteUserTask(this.state.id);
     }
 
+    editTaskHandle = event => {
+        this.setState({successEdit: true})
+    }
+
+    handleCloseEdit = () => {
+        this.setState({successEdit: false});
+    };
+
+    handleInput = (event) => {
+        this.setState({[event.target.name]: event.target.value})
+    }
+
+    sendEditTask = event => {    
+        console.log("error desc "+this.state.errorDescription );
+        console.log("error title "+this.state.errorTitle)
+        if(this.state.editDescription===''){
+            this.setState({errorDescription: true})
+        } else {
+            this.setState({errorDescription: false})
+        }
+        if(this.state.edittTitle===''){
+            this.setState({errorTitle: true})
+        } else {
+            this.setState({errorTitle: false})
+        }
+        if(this.state.edittTitle === '' && this.state.editDescription === ''){
+            this.setState({errorDescription: true, errorTitle: true})
+        }
+        else if(this.state.editDescription!=='' && this.state.edittTitle!==''){
+            this.props.onEditTask(this.state.id, this.state.editDescription, this.state.edittTitle, this.state.status);
+            this.setState({successEdit: false});
+        }
+
+    }
+
     render() {
         return(
-            <div className="task">
+            <div>
                 <Card className="task">
                     <Tooltip title="Delete user of task">
                         <IconButton color="secondary" aria-label="delete-task" component="span" onClick={this.deleteUserTaskHandle} variant="outlined">
@@ -81,7 +131,7 @@ export default class Task extends Component {
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Edit task">
-                        <IconButton color="primary" aria-label="delete-task" component="span">
+                        <IconButton color="primary" aria-label="edit-task" component="span" onClick={this.editTaskHandle}>
                             <EditOutlinedIcon />
                         </IconButton>
                     </Tooltip>
@@ -121,7 +171,7 @@ export default class Task extends Component {
                             </FormControl>
                         </div>
                         <div className="changeStatus">
-                            <FormControl className="FormControl">
+                            <FormControl className="formControl">
                                 <InputLabel id="assign-user-input">Status</InputLabel>
                                 <Select
                                     noderef = {this.selectRef}
@@ -139,6 +189,51 @@ export default class Task extends Component {
                         </div>
                     </CardActions>
                 </Card>
+                <Dialog className="dialog" open={this.state.successEdit} onClose={this.handleCloseEdit} aria-labelledby="form-dialog-title">
+                  <DialogTitle id="form-dialog-title">Edit task</DialogTitle>
+                  <DialogContent>
+                      <div className="textField">
+                          <TextField
+                            autoFocus
+                            error={this.state.errorTitle}
+                            helperText={this.state.edittTitle === "" ? 'Empty field!' : ' '}
+                            label="Title"
+                            margin="dense"
+                            name="edittTitle"
+                            placeholder="Title"
+                            id="edit-task-title"
+                            onChange={this.handleInput}
+                            type="text"
+                            value={this.state.edittTitle}
+                            fullWidth
+                          />
+                      </div>
+                      <div>
+                          <TextField
+                            error={this.state.errorDescription}
+                            helperText={this.state.editDescription === "" ? 'Empty field!' : ' '}
+                            margin="dense"
+                            multiline
+                            name="editDescription"
+                            variant="outlined"
+                            rows={3}
+                            label="Description"
+                            onChange={this.handleInput}
+                            id="edit-task-description"
+                            type="text"
+                            value={this.state.editDescription}
+                          />
+                      </div>
+                  </DialogContent>
+                  <DialogActions className="dialogActions">
+                    <Button onClick={this.handleCloseEdit} color="secondary">
+                      Cancel
+                    </Button>
+                    <Button onClick={this.sendEditTask} color="primary">
+                      Send
+                    </Button>
+                  </DialogActions>
+                </Dialog>
             </div>
         );
     }
@@ -158,5 +253,7 @@ Task.propTypes = {
     users: PropTypes.array,
     onChangeState: PropTypes.func,
     onChangeUser: PropTypes.func,
-    onDeleteUserTask: PropTypes.func
+    onDeleteUserTask: PropTypes.func,
+    onEditTask: PropTypes.func
 };
+

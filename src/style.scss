@@ -1,5 +1,5 @@
 .body{
-    background: lemonchiffon;
+    background: initial;
 }
 .actions{
     justify-content: space-between
@@ -16,13 +16,26 @@
         color: black;
     }
     & .MuiButtonBase-root{
-        background: rgba(3, 79, 132, 0.7);
+        background: rgba(250, 133, 150, 0.8);
         color: white;
+    }
+    & .hover{
+        background-color: rgba(102, 150, 190, 0.2);
+        color: black;
     }
 }
 .task{
     & .MuiPaper-root {
         background-color: #d5f4e6;
+        margin: 15px 7px;
+        width: inherit;
+    }
+}
+.openList{
+    & .MuiPaper-root {
+        background-color: rgba(179, 255, 179, 0.4);
+        border-radius: 15px;
+        border: 2px solid #66ff66;
         margin: 15px 7px;
         width: inherit;
     }
@@ -46,7 +59,7 @@
     flex-wrap: 'wrap';
     justify-content: space-around;
     overflow: hidden;
-    background-color: lemonchiffon;
+    background-color: initial;
 }
 .listTaskTitle{
     color: #034f84;
@@ -79,6 +92,10 @@
     margin: 8px;
     minWidth: 120px,
 }
+.formSearch{
+    margin-top: 20px;
+    minWidth: 120px,
+}
 .textField{
     margin-bottom: 20px;
 }
@@ -86,12 +103,30 @@
     backgroundColor: inherit;
     padding: 0px;   
 }
+.dialog{
+    & .MuiPaper-root{
+        background-color: rgba(232, 229, 255, 1);
+    }
+}
+.dialogActions{
+    & .MuiButton-textPrimary:hover{
+        background-color: rgba(102, 150, 190, 0.2);
+        color: black;
+    }
+    & .MuiButton-textSecondary:hover{
+        background-color: rgba(245, 0, 87, 0.1);
+        color: black;
+    }
+}
 .search{
     position: relative;
     border-radius: 10%;
     background-color: rgba(255, 255, 255, 0.5);
     & .hover {
       background-color: rgba(255, 255, 255, 5);
+    }
+    & .Mui-error{
+        color: red;
     }
     margin-right: 8px;
     margin-left: 0px;
@@ -117,4 +152,7 @@
         background: white;
         color: black;
     }
+}
+.searchStatus{
+    margin-top: 10px;
 }

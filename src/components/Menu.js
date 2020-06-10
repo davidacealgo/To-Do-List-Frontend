@@ -88,12 +88,13 @@ export default class TopBar extends Component {
 	                <Button className="button" variant="outlined" name="openUser" onClick={this.handleClickUser}>
 			        	Create User
 			      	</Button>
-			      	<Dialog open={this.state.openUser} onClose={this.handleCloseUser} aria-labelledby="form-dialog-title">
+			      	<Dialog className="dialog" open={this.state.openUser} onClose={this.handleCloseUser} aria-labelledby="form-dialog-title">
 				        <DialogTitle id="form-dialog-title">Create user</DialogTitle>
 				        <DialogContent>
 				          <div className="textField">
 					          <TextField
 					            autoFocus
+					            label="First name"
 					            margin="dense"
 					            name="inputFirstName"
 					            onChange={this.handleInput}
@@ -105,6 +106,7 @@ export default class TopBar extends Component {
 				          </div>
 				          <div>
 					          <TextField
+					          	label="Last name"
 					            name="inputLastName"
 					            margin="dense"
 					            onChange={this.handleInput}
@@ -114,7 +116,7 @@ export default class TopBar extends Component {
 					          />
 				          </div>
 				        </DialogContent>
-				        <DialogActions>
+				        <DialogActions className="dialogActions">
 				          <Button onClick={this.handleCloseUser} color="secondary">
 				            Cancel
 				          </Button>
@@ -128,12 +130,13 @@ export default class TopBar extends Component {
 			      	<Button variant="outlined" color="primary" onClick={this.handleClickTask}>
 			        	Create task
 			      	</Button>
-			      	<Dialog open={this.state.openTask} onClose={this.handleCloseTask} aria-labelledby="form-dialog-title">
+			      	<Dialog className="dialog" open={this.state.openTask} onClose={this.handleCloseTask} aria-labelledby="form-dialog-title">
 				        <DialogTitle id="form-dialog-title">Create task</DialogTitle>
 				        <DialogContent>
 				          <div className="textField">
 					          <TextField
 					            autoFocus
+					            label="Title"
 					            margin="dense"
 					            name="inputTitle"
 					            placeholder="Title"
@@ -157,7 +160,7 @@ export default class TopBar extends Component {
 					          />
 				          </div>
 				        </DialogContent>
-				        <DialogActions>
+				        <DialogActions className="dialogActions">
 				          <Button onClick={this.handleCloseTask} color="secondary">
 				            Cancel
 				          </Button>
@@ -167,12 +170,16 @@ export default class TopBar extends Component {
 				        </DialogActions>
 			      	</Dialog>
 		      	</div>
-		      	<Snackbar open={this.state.success} autoHideDuration={20000} onClose={this.handleCloseAlert}>
+		      	<Snackbar open={this.state.success} autoHideDuration={3000} onClose={this.handleCloseAlert}>
 		            <this.Alert name="success" id="success" onClose={this.handleCloseAlert} severity="success">
 		            	{`${this.state.message} created successfully!`}
 		            </this.Alert>
 		        </Snackbar>
-        		<SearchTask onHandleSearch={this.state.onSearchTask} taskFound={this.state.taskFound} successTask={this.state.successSearch}></SearchTask>
+        		<SearchTask 
+        			onHandleSearch={this.state.onSearchTask} 
+        			taskFound={this.state.taskFound} 
+        			successTask={this.state.successSearch}>
+        		</SearchTask>
             </div>
         );
     }
@@ -182,4 +189,5 @@ TopBar.propTypes = {
     onCreateTask: PropTypes.func,
     onCreateUser: PropTypes.func
 };
+
 

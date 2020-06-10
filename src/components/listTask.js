@@ -10,6 +10,7 @@ export default class TaskList extends Component {
             changeStatusHandler: props.changeStatusHandler,
             changeUserHandler: props.changeUserHandler,
             deleteUserTaskHandler: props.deleteUserTaskHandler,
+            editTask: props.editTask,
             users: props.users // Aca tenes que mandar los user por medio de los props 
         };
     }
@@ -37,6 +38,7 @@ export default class TaskList extends Component {
                             onChangeState={this.state.changeStatusHandler}
                             onChangeUser={this.state.changeUserHandler}
                             onDeleteUserTask={this.state.deleteUserTaskHandler}
+                            onEditTask={this.state.editTask}
                             status={task.status}
                             user={task.user}
                             users={this.state.users}
@@ -46,3 +48,4 @@ export default class TaskList extends Component {
         );
     }
 }
+
