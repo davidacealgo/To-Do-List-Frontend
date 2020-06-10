@@ -19,7 +19,7 @@ export default class SearchTask extends Component {
     constructor(props) {
         super(props);
         this.state = {
-      		successTask: props.openTask,
+      		  successTask: props.openTask,
             taskFound: props.taskFound,
         };
 
@@ -31,6 +31,7 @@ export default class SearchTask extends Component {
             this.setState({taskFound: this.props.taskFound})
         if(prevProps.successTask !== this.props.successTask)
             this.setState({successTask: this.props.successTask})
+        debugger;
     }
 
     onKeyDown(event){
@@ -53,12 +54,12 @@ export default class SearchTask extends Component {
 	            	id="search-task"
 	            	name="searchTask"
 	                placeholder="Search task title…"
-	                inputProps={{ 'aria-label': 'search task', 'error': true }}
+	                inputProps={{ 'aria-label': 'search task', 'error': "true" }}
 	                onChange={this.handleSearchTask}
 	                onKeyDown={this.onKeyDown}
 	            />
 	            <Dialog open={this.state.successTask} onClose={this.handleCloseTask} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Edit task</DialogTitle>
+            <DialogTitle id="form-dialog-title">View task</DialogTitle>
             <DialogContent>
               <div className="textField">
                 <TextField
@@ -118,8 +119,8 @@ export default class SearchTask extends Component {
 }
 
 SearchTask.propTypes = {
-	onHandleSearch: PropTypes.func,
-	successTask: PropTypes.bool,
-	taskFound: PropTypes.object
+	onHandleSearch: PropTypes.func.isRequired,
+	successTask: PropTypes.bool.isRequired,
+	taskFound: PropTypes.object.isRequired
 }
 

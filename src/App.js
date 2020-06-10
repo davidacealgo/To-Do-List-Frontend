@@ -1,21 +1,10 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
 import ListTask from './components/listTask';
 import Menu from './components/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import MuiAlert from '@material-ui/lab/Alert';
-import SearchTask from './components/searchTask';
 import Snackbar from '@material-ui/core/Snackbar';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import './style.scss';
 
@@ -171,11 +160,9 @@ export default class App extends Component {
     {
       axios.get(`http://localhost:3000/tasks/${taskFound[0]._id}`)
           .then(response => {
-            console.log(response.data);
             this.setState({ taskFound: response.data, openTask: true, searchError: false });
           });
     } else {
-      console.log("hi");
       this.setState({searchError: true})
     }
   }
@@ -204,7 +191,7 @@ export default class App extends Component {
               deleteUserTaskHandler={this.deleteUserTask}
               editTask={this.editTask}>Open</ListTask>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} className="inProgressList">
           <Typography variant="h5" className="listTaskTitle">
                 In progress
             </Typography>
@@ -216,7 +203,7 @@ export default class App extends Component {
               deleteUserTaskHandler={this.deleteUserTask}
               editTask={this.editTask}>In progress</ListTask>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} className="closeList">
             <Typography variant="h5" className="listTaskTitle">
                 Closed
             </Typography>
@@ -228,7 +215,7 @@ export default class App extends Component {
               deleteUserTaskHandler={this.deleteUserTask}
               editTask={this.editTask}>Closed</ListTask>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} className="archivedList">
             <Typography variant="h5" className="listTaskTitle">
                 Archived
             </Typography>
