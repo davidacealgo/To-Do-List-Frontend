@@ -10,7 +10,8 @@ Features:<br/>
 6. List of users<br/>
 7. Change status in a task (Open, In progress, Closed and Archived)<br/>
 
-To start, download or clone the repository, and run ###npm install
+To start, download or clone the repository
+
 ## Available Scripts
 
 In the project directory, you can run: `npm install`<br/>
@@ -22,8 +23,9 @@ The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
 ## Built with
-[Create React App](https://github.com/facebook/create-react-app).<br/>
-[Material-ui framework](https://material-ui.com/) 
+To create user interfaces => [Create React App](https://github.com/facebook/create-react-app).<br/>
+To implement material design => [Material-ui framework](https://material-ui.com/).<br/>
+To intercept the API => [Axios](https://github.com/axios/axios).<br/>
 
 Author
 --------
