@@ -97,9 +97,7 @@ export default class Task extends Component {
         this.setState({[event.target.name]: event.target.value})
     }
 
-    sendEditTask = event => {    
-        console.log("error desc "+this.state.errorDescription );
-        console.log("error title "+this.state.errorTitle)
+    sendEditTask = event => {
         if(this.state.editDescription===''){
             this.setState({errorDescription: true})
         } else {
@@ -134,18 +132,18 @@ export default class Task extends Component {
                             <EditOutlinedIcon />
                         </IconButton>
                     </Tooltip>
-                    <CardContent>
+                    <CardContent className="typography">
                         <Typography className="title" variant="h5">
                             {this.state.title}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
                             {this.state.description}
                         </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                            {this.state.created.substring(0,10)}
+                        <Typography variant="body2" color="textPrimary">
+                            User: {this.getNames(this.state.user)}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            User: {this.getNames(this.state.user)}
+                            {this.state.created.substring(0,10)}
                         </Typography>
                     </CardContent>
                     <CardActions className="actions">

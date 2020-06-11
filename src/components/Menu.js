@@ -17,6 +17,10 @@ export default class TopBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
+        	errorFirstName: false,
+        	errorLastName: false,
+            errorTitle: false,
+            errorDescription: false,
             openUser: false,
             openTask: false,
             onCreateTask: props.onCreateTask,
@@ -25,6 +29,8 @@ export default class TopBar extends Component {
             taskFound: props.taskFound,
             inputTitle: '',
             inputDescription: '',
+            inputFirstName: '',
+            inputLastName: '',
             message: '',
             success: false,
             successSearch: props.openTask
@@ -72,13 +78,43 @@ export default class TopBar extends Component {
     }
 
     handleCreateTask(){
-    	this.props.onCreateTask(this.state.inputTitle, this.state.inputDescription);
-    	this.setState({openTask: false, success: true, message: "Task"});
+    	if(this.state.inputDescription===''){
+            this.setState({errorDescription: true})
+        } else {
+            this.setState({errorDescription: false})
+        }
+        if(this.state.inputTitle===''){
+            this.setState({errorTitle: true})
+        } else {
+            this.setState({errorTitle: false})
+        }
+        if(this.state.inputTitle === '' && this.state.inputDescription === ''){
+            this.setState({errorDescription: true, errorTitle: true})
+        }
+        else if(this.state.inputDescription!=='' && this.state.inputTitle!==''){
+	    	this.props.onCreateTask(this.state.inputTitle, this.state.inputDescription);
+	    	this.setState({openTask: false, success: true, message: "Task"});
+	    }
     }
 
     handleCreateUser(){
-    	this.props.onCreateUser(this.state.inputFirstName, this.state.inputLastName);
-    	this.setState({openUser: false, success: true, message: "User"});
+    	if(this.state.inputFirstName===''){
+            this.setState({errorFirstName: true})
+        } else {
+            this.setState({errorFirstName: false})
+        }
+        if(this.state.inputLastName===''){
+            this.setState({errorLastName: true})
+        } else {
+            this.setState({errorLastName: false})
+        }
+        if(this.state.inputLastName === '' && this.state.inputFirstName === ''){
+            this.setState({errorFirstName: true, errorLastName: true})
+        }
+        else if(this.state.inputFirstName!=='' && this.state.inputLastName!==''){
+	    	this.props.onCreateUser(this.state.inputFirstName, this.state.inputLastName);
+	    	this.setState({openUser: false, success: true, message: "User"});
+	    }
     }
 
     render() {
@@ -94,6 +130,8 @@ export default class TopBar extends Component {
 				          <div className="textField">
 					          <TextField
 					            autoFocus
+					            error={this.state.errorFirstName}
+					            helperText={this.state.inputFirstName === "" ? 'Empty field!' : ' '}
 					            label="First name"
 					            margin="dense"
 					            name="inputFirstName"
@@ -106,6 +144,8 @@ export default class TopBar extends Component {
 				          </div>
 				          <div>
 					          <TextField
+					          	error={this.state.errorLastName}
+					          	helperText={this.state.inputLastName === "" ? 'Empty field!' : ' '}
 					          	label="Last name"
 					            name="inputLastName"
 					            margin="dense"
@@ -136,6 +176,8 @@ export default class TopBar extends Component {
 				          <div className="textField">
 					          <TextField
 					            autoFocus
+					            error={this.state.errorTitle}
+					            helperText={this.state.inputTitle === "" ? 'Empty field!' : ' '}
 					            label="Title"
 					            margin="dense"
 					            name="inputTitle"
@@ -148,6 +190,8 @@ export default class TopBar extends Component {
 				          </div>
 				          <div>
 					          <TextField
+					          	error={this.state.errorDescription}
+					          	helperText={this.state.inputDescription === "" ? 'Empty field!' : ' '}
 					            margin="dense"
 						        multiline
 						        name="inputDescription"

@@ -180,8 +180,8 @@ export default class App extends Component {
         >{this.state.taskFound}</Menu>
         <Grid container spacing={1} className="gridList">
           <Grid item xs={3} className="openList">
-            <Typography variant="h5" className="listTaskTitle">
-                Open
+            <Typography variant="h4" className="listTaskTitle">
+                OPEN
             </Typography>
             <ListTask 
               tasks={this.retrieveTaskByStatus('Open')}
@@ -192,8 +192,8 @@ export default class App extends Component {
               editTask={this.editTask}>Open</ListTask>
           </Grid>
           <Grid item xs={3} className="inProgressList">
-          <Typography variant="h5" className="listTaskTitle">
-                In progress
+          <Typography variant="h4" className="listTaskTitle">
+                IN PROGRESS
             </Typography>
             <ListTask 
               tasks={this.retrieveTaskByStatus('In progress')} 
@@ -204,8 +204,8 @@ export default class App extends Component {
               editTask={this.editTask}>In progress</ListTask>
           </Grid>
           <Grid item xs={3} className="closeList">
-            <Typography variant="h5" className="listTaskTitle">
-                Closed
+            <Typography variant="h4" className="listTaskTitle">
+                CLOSED
             </Typography>
             <ListTask 
               tasks={this.retrieveTaskByStatus('Closed')}  
@@ -216,8 +216,8 @@ export default class App extends Component {
               editTask={this.editTask}>Closed</ListTask>
           </Grid>
           <Grid item xs={3} className="archivedList">
-            <Typography variant="h5" className="listTaskTitle">
-                Archived
+            <Typography variant="h4" className="listTaskTitle">
+                ARCHIVE
             </Typography>
             <ListTask 
               tasks={this.retrieveTaskByStatus('Archived')}  

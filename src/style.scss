@@ -16,12 +16,12 @@
         color: black;
     }
     & .MuiButtonBase-root{
-        background: rgba(133, 51, 255, 0.8);
+        background: rgba(102, 204, 255, 0.8);
         color: white;
     }
     & .hover{
         background-color: rgba(102, 150, 190, 0.2);
-        color: black;
+        color: rgba(102, 204, 255, 1);
     }
 }
 .task{
@@ -76,9 +76,16 @@
     & .MuiGrid-spacing-xs-1 > .MuiGrid-item{
         padding: 12px 0px 0px 0px
     }
+
+    & .MuiTypography-h4{
+        font-family: serif;
+        font-size: 1.7rem;
+        font-weight: bold;
+    }
 }
 .list{
     margin: 8px;
+    margin-bottom: 24px;
     text-align: -webkit-center;
 }
 .listTasks{
@@ -89,13 +96,18 @@
     background-color: initial;
 }
 .listTaskTitle{
-    color: #034f84;
+    color: black;
     text-align: center;
     padding-top: 4px;
+    font-family: unset;
+    font-size: 13px;
+    font-weight: bold;
 }
 .listTitle{
     color: #034f84;
-    font-size: 14px;
+    font-family: unset;
+    font-size: 13px;
+    font-weight: bold;
     padding-left: 15px;
     padding-top: 4px;
 }
@@ -132,7 +144,7 @@
 }
 .dialog{
     & .MuiPaper-root{
-        background-color: rgba(232, 229, 255, 1);
+        background-color: rgba(232, 229, 255, 0.97);
     }
 }
 .dialogActions{
@@ -155,9 +167,10 @@
     & .Mui-error{
         color: red;
     }
+    margin-top: 20px;
     margin-right: 8px;
     margin-left: 0px;
-    outline-color: #a366ff;
+    outline-color: rgba(102, 204, 255, 1);
     outline-style: outset;
     outline-width: 2px;
     width: 23%;
@@ -178,6 +191,19 @@
     & .MuiTooltip-tooltip > .MuiTooltip-tooltipPlacementBottom{
         background: white;
         color: black;
+    }
+}
+.typography{
+    & .MuiTypography-body2{
+        font-family: unset;
+        margin-top: 6px;
+    }
+    & .MuiTypography-h4{
+        font-family: serif;
+        font-weight: bold;
+    }
+    & .MuiTypography-h5{
+        font-family: serif;
     }
 }
 .searchStatus{
